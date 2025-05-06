@@ -14,7 +14,7 @@
     color-scheme: dark;
     background: #151b23;
     font-size: 1.2vw;
-    overflow: clip
+    overflow: clip;
   }
   
   #parent-container {
@@ -23,7 +23,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: clip;
   }
   #main-container {
     display: flex;
@@ -109,6 +109,7 @@
     }
   
     .camera-panel {
+      display: flex;
       justify-content: center;
       align-items: center;
     }

@@ -4,4 +4,7 @@
 /.esphome/
 /secrets.yaml
 *.min.html
+*.min.css
+*.min.js
+*.min.js.map
 **.pyc
