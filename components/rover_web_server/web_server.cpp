@@ -37,7 +37,7 @@
 namespace esphome {
 namespace web_server {
 
-static const char *const TAG = "web_server";
+static const char *const TAG = "rover_web_server";
 
 #ifdef USE_WEBSERVER_PRIVATE_NETWORK_ACCESS
 static const char *const HEADER_PNA_NAME = "Private-Network-Access-Name";
@@ -285,7 +285,7 @@ void WebServer::dump_config() {
   ESP_LOGCONFIG(TAG, "Web Server:");
   ESP_LOGCONFIG(TAG, "  Address: %s:%u", network::get_use_address().c_str(), this->base_->get_port());
 }
-float WebServer::get_setup_priority() const { return setup_priority::WIFI - 1.0f; }
+float WebServer::get_setup_priority() const { return setup_priority::LATE; }
 
 #ifdef USE_WEBSERVER_LOCAL
 void WebServer::handle_index_request(AsyncWebServerRequest *request) {
@@ -633,6 +633,28 @@ void WebServer::handle_fan_request(AsyncWebServerRequest *request, const UrlMatc
         }
         call.set_speed(*val);
       }
+      if (request->hasParam("direction")) {
+        auto direction = request->getParam("direction")->value();
+        auto val = parse_on_off(direction.c_str());
+        switch (val) {
+          case PARSE_ON:
+            call.set_direction(fan::FanDirection::FORWARD);
+            break;
+          case PARSE_OFF:
+            call.set_direction(fan::FanDirection::REVERSE);
+            break;
+          case PARSE_TOGGLE:
+            if (call.get_direction() == fan::FanDirection::FORWARD) {
+              call.set_direction(fan::FanDirection::REVERSE);
+            } else {
+              call.set_direction(fan::FanDirection::FORWARD);
+            }
+            break;
+          case PARSE_NONE:
+            request->send(404);
+            return;
+        }
+      }
       if (request->hasParam("oscillation")) {
         auto speed = request->getParam("oscillation")->value();
         auto val = parse_on_off(speed.c_str());
@@ -671,6 +693,9 @@ std::string WebServer::fan_json(fan::Fan *obj, JsonDetail start_config) {
     set_json_icon_state_value(root, obj, "fan-" + obj->get_object_id(), obj->state ? "ON" : "OFF", obj->state,
                               start_config);
     const auto traits = obj->get_traits();
+    if (traits.supports_direction()) {
+      root["direction"] = obj->direction == fan::FanDirection::FORWARD ? "forward" : "reverse";
+    }
     if (traits.supports_speed()) {
       root["speed_level"] = obj->speed;
       root["speed_count"] = traits.supported_speed_count();

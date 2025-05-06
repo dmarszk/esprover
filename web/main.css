@@ -1,0 +1,115 @@
+* {
+    box-sizing: border-box;
+    color: #f0f6fc;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color-scheme: dark;
+    background: #151b23;
+    font-size: 1.2vw;
+    overflow: clip
+  }
+  
+  #parent-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  #main-container {
+    display: flex;
+    width: 95vw;
+    height: auto;
+    border: 1px solid #ccc;
+    flex-wrap: wrap;
+    overflow: hidden;
+  }
+  
+  .text-panel, .camera-panel {
+    padding: 20px;
+    overflow: hidden;
+  }
+  
+  .text-panel {
+    flex: 1;
+    border-right: 1px solid #ccc;
+  }
+  
+  .camera-panel {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #parameters-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: auto; /* Allow columns to adjust based on content */
+  }
+  
+  #parameters-table th, #parameters-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  #parameters-table td:first-child, #parameters-table th:first-child {
+    white-space: nowrap; /* Prevent wrapping for the first column */
+    width: 1%; /* Adjust column width to fit the content */
+  }
+  
+  #camera-stream {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  .slider-container {
+    display: inline-block; /* Make the container inline with text */
+    text-align: center;
+    margin-bottom: 30px; /* Increase margin to prevent overlap */
+    position: relative;
+  }
+  
+  .slider-value {
+    margin-top: 5px;
+    /* font-size: 14px; */
+    font: bold;
+    position: absolute; /* Position relative to the container */
+    top: 100%; /* Place below the input slider */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust for centering */
+  }
+  canvas {
+    overflow: clip;
+  }
+  /* vertical orientation settings */
+  
+  @media (max-width: 500px) {
+    body {
+      font-size: 3vw; /* Adjust font size for smaller screens */
+    }
+    #main-container {
+      flex-direction: column; /* Stack panels vertically */
+    }
+  
+    .text-panel {
+      border-right: none; /* Remove the right border */
+      border-bottom: 1px solid #ccc; /* Add a bottom border for separation */
+    }
+  
+    .camera-panel {
+      justify-content: center;
+      align-items: center;
+    }
+  }

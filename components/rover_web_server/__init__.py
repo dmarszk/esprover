@@ -134,13 +134,13 @@ WEBSERVER_SORTING_SCHEMA = cv.Schema(
     {
         cv.Optional(CONF_WEB_SERVER): cv.Schema(
             {
-                cv.OnlyWith(CONF_WEB_SERVER_ID, "web_server"): cv.use_id(WebServer),
+                cv.OnlyWith(CONF_WEB_SERVER_ID, "rover_web_server"): cv.use_id(WebServer),
                 cv.Optional(CONF_SORTING_WEIGHT): cv.All(
-                    cv.requires_component("web_server"),
+                    cv.requires_component("rover_web_server"),
                     cv.float_,
                 ),
                 cv.Optional(CONF_SORTING_GROUP_ID): cv.All(
-                    cv.requires_component("web_server"),
+                    cv.requires_component("rover_web_server"),
                     cv.use_id(cg.int_),
                 ),
             }
