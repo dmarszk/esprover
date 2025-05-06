@@ -75,10 +75,39 @@
   }
   
   .slider-container {
-    display: inline-block; /* Make the container inline with text */
+    display: block; /* Change to block to take full width */
+    width: 100%; /* Ensure it uses all available width */
     text-align: center;
     margin-bottom: 30px; /* Increase margin to prevent overlap */
     position: relative;
+  }
+  
+  .slider-container input[type="range"] {
+    width: 100%; /* Use all available width */
+    height: 20px; /* Increase height for better touch interaction */
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    background: #ccc; /* Slider track color */
+    border-radius: 10px; /* Rounded edges for the track */
+    outline: none; /* Remove focus outline */
+  }
+  
+  .slider-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    width: 30px; /* Increase thumb size */
+    height: 30px; /* Increase thumb size */
+    background: #0078d4; /* Thumb color */
+    border-radius: 50%; /* Make thumb circular */
+    cursor: pointer; /* Change cursor to pointer */
+  }
+  
+  .slider-container input[type="range"]::-moz-range-thumb {
+    width: 30px; /* Increase thumb size */
+    height: 30px; /* Increase thumb size */
+    background: #0078d4; /* Thumb color */
+    border-radius: 50%; /* Make thumb circular */
+    cursor: pointer; /* Change cursor to pointer */
   }
   
   .slider-value {

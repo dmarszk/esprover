@@ -52,7 +52,27 @@ esp32_camera_web_server:
 
 
 # External components
-
+number:
+  - platform: template
+    id: "servo_1_angle"
+    min_value: 0
+    max_value: 180
+    initial_value: 90
+    step: 1
+    optimistic: true
+    set_action:
+      lambda: |-
+        id(servo_1).write(x / 90.0 - 1.0);
+  - platform: template
+    id: "servo_2_angle"
+    min_value: 0
+    max_value: 180
+    initial_value: 90
+    step: 1
+    optimistic: true
+    set_action:
+      lambda: |-
+        id(servo_2).write(x / 90.0 - 1.0);
 fan:
   - platform: hbridge
     id: motor_left
@@ -65,12 +85,12 @@ fan:
 servo:
   - id: servo_1
     output: servo_1_pwm
-    min_level: 5%
-    max_level: 10%
+    # min_level: 5%
+    # max_level: 10%
   - id: servo_2
     output: servo_2_pwm
-    min_level: 5%
-    max_level: 10%
+    # min_level: 5%
+    # max_level: 10%
 
 output:
   - platform: ledc
@@ -121,5 +141,7 @@ esp32_camera:
   vsync_pin: GPIO25
   href_pin: GPIO23
   pixel_clock_pin: GPIO22
-  resolution: 1600x1200
-  # jpeg_quality: 10
+  resolution: 800x600
+  max_framerate: 1 fps
+  # resolution: 1600x1200
+  jpeg_quality: 10
