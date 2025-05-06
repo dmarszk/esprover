@@ -39,16 +39,15 @@ wifi:
   domain: .home
   power_save_mode: none
   output_power: 18dB
-  networks:
-    - ssid: ${wifi_ssid}
-      password: ${wifi_password}
-      hidden: ${wifi_hidden}
-      bssid: ${wifi_bssid}
-  # # Alternatively operate in AP mode
-  # ap:
-  #   ssid: ${ap_ssid_${rover_id}}
-  #   password: ${ap_password_${rover_id}}
-  #   channel: ${ap_channel_${rover_id}}
+  # networks:
+  #   - ssid: ${wifi_ssid}
+  #     password: ${wifi_password}
+  #     hidden: ${wifi_hidden}
+  #     bssid: ${wifi_bssid}
+  ap:
+    ssid: ${ap_ssid_${rover_id}}
+    password: ${ap_password_${rover_id}}
+    channel: ${ap_channel_${rover_id}}
 
 # Announce itself via mDNS
 mdns:
