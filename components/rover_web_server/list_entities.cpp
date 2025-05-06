@@ -7,7 +7,7 @@
 #include "web_server.h"
 
 namespace esphome {
-namespace web_server {
+namespace rover_web_server {
 
 #ifdef USE_ARDUINO
 ListEntitiesIterator::ListEntitiesIterator(const WebServer *ws, DeferredUpdateEventSource *es)
@@ -191,6 +191,6 @@ bool ListEntitiesIterator::on_update(update::UpdateEntity *obj) {
 }
 #endif
 
-}  // namespace web_server
+}  // namespace rover_web_server
 }  // namespace esphome
 #endif

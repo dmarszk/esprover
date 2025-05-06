@@ -6,11 +6,11 @@
 #include "esphome/core/component_iterator.h"
 namespace esphome {
 #ifdef USE_ESP_IDF
-namespace web_server_idf {
+namespace rover_web_server_idf {
 class AsyncEventSource;
 }
 #endif
-namespace web_server {
+namespace rover_web_server {
 
 #ifdef USE_ARDUINO
 class DeferredUpdateEventSource;
@@ -98,6 +98,6 @@ class ListEntitiesIterator : public ComponentIterator {
 #endif
 };
 
-}  // namespace web_server
+}  // namespace rover_web_server
 }  // namespace esphome
 #endif

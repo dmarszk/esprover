@@ -35,7 +35,7 @@
 #endif
 
 namespace esphome {
-namespace web_server {
+namespace rover_web_server {
 
 static const char *const TAG = "rover_web_server";
 
@@ -2188,6 +2188,6 @@ void WebServer::schedule_(std::function<void()> &&f) {
 #endif
 }
 
-}  // namespace web_server
+}  // namespace rover_web_server
 }  // namespace esphome
 #endif

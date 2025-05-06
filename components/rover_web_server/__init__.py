@@ -39,7 +39,7 @@ CONF_SORTING_GROUP_ID = "sorting_group_id"
 CONF_SORTING_GROUPS = "sorting_groups"
 CONF_SORTING_WEIGHT = "sorting_weight"
 
-web_server_ns = cg.esphome_ns.namespace("web_server")
+web_server_ns = cg.esphome_ns.namespace("rover_web_server")
 WebServer = web_server_ns.class_("WebServer", cg.Component, cg.Controller)
 
 sorting_groups = {}

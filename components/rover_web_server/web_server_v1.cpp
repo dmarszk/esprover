@@ -4,7 +4,7 @@
 #if USE_WEBSERVER_VERSION == 1
 
 namespace esphome {
-namespace web_server {
+namespace rover_web_server {
 
 void write_row(AsyncResponseStream *stream, EntityBase *obj, const std::string &klass, const std::string &action,
                const std::function<void(AsyncResponseStream &stream, EntityBase *obj)> &action_func = nullptr) {
@@ -212,6 +212,6 @@ void WebServer::handle_index_request(AsyncWebServerRequest *request) {
   request->send(stream);
 }
 
-}  // namespace web_server
+}  // namespace rover_web_server
 }  // namespace esphome
 #endif
