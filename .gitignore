@@ -3,8 +3,7 @@
 # You can modify this file to suit your needs.
 /.esphome/
 /secrets.yaml
-*.min.html
-*.min.css
-*.min.js
-*.min.js.map
+web/*.gz
+web/*.min.*
+web/*.h
 **.pyc

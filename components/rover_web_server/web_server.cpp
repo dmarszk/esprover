@@ -31,6 +31,8 @@
 #include "server_index_v2.h"
 #elif USE_WEBSERVER_VERSION == 3
 #include "server_index_v3.h"
+#elif USE_WEBSERVER_VERSION == 4
+#include "server_index_rover.h"
 #endif
 #endif
 

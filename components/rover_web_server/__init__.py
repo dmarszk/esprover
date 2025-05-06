@@ -62,6 +62,11 @@ def default_url(config):
             config[CONF_CSS_URL] = ""
         if CONF_JS_URL not in config:
             config[CONF_JS_URL] = "https://oi.esphome.io/v3/www.js"
+    if config[CONF_VERSION] == 4:
+        if CONF_CSS_URL not in config:
+            config[CONF_CSS_URL] = ""
+        if CONF_JS_URL not in config:
+            config[CONF_JS_URL] = ""
     return config
 
 
@@ -154,7 +159,7 @@ CONFIG_SCHEMA = cv.All(
         {
             cv.GenerateID(): cv.declare_id(WebServer),
             cv.Optional(CONF_PORT, default=80): cv.port,
-            cv.Optional(CONF_VERSION, default=2): cv.one_of(1, 2, 3, int=True),
+            cv.Optional(CONF_VERSION, default=2): cv.one_of(1, 2, 3, 4, int=True),
             cv.Optional(CONF_CSS_URL): cv.string,
             cv.Optional(CONF_CSS_INCLUDE): cv.file_,
             cv.Optional(CONF_JS_URL): cv.string,

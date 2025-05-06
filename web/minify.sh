@@ -6,9 +6,10 @@ cd "$(dirname "$0")"
 # Define file paths
 HTML_FILE="index.html"
 CSS_FILE="main.css"
-JS_FILES=("main.js" "virtualjoystick.js")
+JS_FILES=( "virtualjoystick.js" "main.js")
 TEMP_HTML="index.tmp.html"
 OUTPUT_FILE="index.min.html"
+OUTPUT_FILE_GZ="index.html.gz"
 
 # Temporary files for minified CSS and JS
 MIN_CSS_FILE="out.min.css"
@@ -33,6 +34,7 @@ echo "Inlining step 1"
 sed \
     -e "s|<link rel=\"stylesheet\" href=\"main.css\">|<style>CSS_PLACEHOLDER</style>|" \
     -e "s|<script src=\"main.js\"></script>|<script>JS_PLACEHOLDER</script>|" \
+    -e "s|<script src=\"virtualjoystick.js\"></script>||" \
     "$HTML_FILE" > "$TEMP_HTML"
 
 echo "Inlining step 2"
@@ -50,4 +52,9 @@ html-minifier-terser --collapse-whitespace --remove-comments --minify-css true -
 # Clean up temporary files
 rm $MIN_CSS_FILE $MIN_JS_FILE $TEMP_HTML
 
-echo "Minification complete. Output written to $OUTPUT_FILE"
+gzip -c -9 $OUTPUT_FILE > $OUTPUT_FILE_GZ
+
+./make_header.sh . server_index_rover.h rover_web_server 4
+cp server_index_rover.h ../components/rover_web_server/
+
+echo "Minification complete. Output written to $OUTPUT_FILE and $OUTPUT_FILE_GZ"
