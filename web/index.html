@@ -32,7 +32,12 @@
                         <td>R Motor Power %</td>
                         <td id="motor-right-pwr">0</td>
                     </tr>
-                </table><label for="servo1">Servo 1:</label>
+                    <tr>
+                        <td>Joystick debug</td>
+                        <td id="joystick-status"></td>
+                    </tr>
+                </table>
+                <label for="servo1">Servo 1:</label>
                 <div class="slider-container">
                     <input type="range" id="servo1" min="0" max="180" value="90" />
                     <div class="slider-value" id="servo1-value">90</div>
@@ -42,18 +47,6 @@
                     <input type="range" id="servo2" min="0" max="180" value="90" />
                     <div class="slider-value" id="servo2-value">90</div>
                 </div>
-                <table id="debug-table">
-                    <tr>
-                        <td colspan="2" style="text-align: center;" >Debug</td>
-                    </tr>
-                    <tr>
-                        <td>Joystick</td>
-                        <td id="joystick-status"></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="camera-panel">
-                <img id="camera-stream" alt="Video">
             </div>
         </div>
     </div>

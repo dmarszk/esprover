@@ -158,7 +158,10 @@ function registerSliderListeners(sliderId) {
     slider.addEventListener('touchstart', (event) => {
         event.stopPropagation();
     });
-    slider.addEventListener('touchdown', (event) => {
+    slider.addEventListener('touchend', (event) => {
+        event.stopPropagation();
+    });
+    slider.addEventListener('touchmove', (event) => {
         event.stopPropagation();
     });
     slider.addEventListener('input', (event) => {
