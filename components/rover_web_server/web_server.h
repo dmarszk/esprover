@@ -512,7 +512,9 @@ class WebServer : public Controller, public Component, public AsyncWebHandler {
 #endif
 
 #ifdef USE_ARDUINO
+#ifdef USE_WIFI_AP
   std::unique_ptr<DNSServer> dns_server_{nullptr};
+#endif
 #endif
 };
 

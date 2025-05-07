@@ -261,10 +261,12 @@ void WebServer::setup() {
     this->base_->add_ota_handler();
 
 #ifdef USE_ARDUINO
+#ifdef USE_WIFI_AP
   this->dns_server_ = make_unique<DNSServer>();
   this->dns_server_->setErrorReplyCode(DNSReplyCode::NoError);
   network::IPAddress ip = wifi::global_wifi_component->wifi_soft_ap_ip();
-  this->dns_server_->start(53, "*", ip);
+  this->dns_server_->start(53, network::get_use_address().c_str(), ip);
+#endif
 #endif
   // doesn't need defer functionality - if the queue is full, the client JS knows it's alive because it's clearly
   // getting a lot of events
@@ -288,8 +290,10 @@ void WebServer::loop() {
   }
 #endif
 #ifdef USE_ARDUINO
+#ifdef USE_WIFI_AP
   if (this->dns_server_ != nullptr)
     this->dns_server_->processNextRequest();
+#endif
 #endif
 
   this->events_.loop();
@@ -648,24 +652,19 @@ void WebServer::handle_fan_request(AsyncWebServerRequest *request, const UrlMatc
       }
       if (request->hasParam("direction")) {
         auto direction = request->getParam("direction")->value();
-        auto val = parse_on_off(direction.c_str());
-        switch (val) {
-          case PARSE_ON:
-            call.set_direction(fan::FanDirection::FORWARD);
-            break;
-          case PARSE_OFF:
+        if (direction == "forward") {
+          call.set_direction(fan::FanDirection::FORWARD);
+        } else if (direction == "reverse") {
+          call.set_direction(fan::FanDirection::REVERSE);
+        } else if (direction == "toggle") {
+          if (call.get_direction() == fan::FanDirection::FORWARD) {
             call.set_direction(fan::FanDirection::REVERSE);
-            break;
-          case PARSE_TOGGLE:
-            if (call.get_direction() == fan::FanDirection::FORWARD) {
-              call.set_direction(fan::FanDirection::REVERSE);
-            } else {
-              call.set_direction(fan::FanDirection::FORWARD);
-            }
-            break;
-          case PARSE_NONE:
-            request->send(404);
-            return;
+          } else {
+            call.set_direction(fan::FanDirection::FORWARD);
+          }
+        } else {
+          request->send(500);
+          return;
         }
       }
       if (request->hasParam("oscillation")) {

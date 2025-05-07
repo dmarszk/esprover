@@ -27,10 +27,15 @@ esp32:
 
 # Enable logging
 logger:
-  # level: VERBOSE
-  # logs:
-  #   camera: VERBOSE
-  #   wifi: INFO
+  level: DEBUG
+  logs:
+    camera: INFO
+    esp32_camera: INFO
+    esp32_camera_web_server: INFO
+    wifi: INFO
+    fan: INFO
+    number: INFO
+    servo: INFO
 
 ota:
   - platform: esphome
@@ -40,15 +45,15 @@ wifi:
   domain: .home
   power_save_mode: none
   output_power: 18dB
-  # networks:
-  #   - ssid: ${wifi_ssid}
-  #     password: ${wifi_password}
-  #     hidden: ${wifi_hidden}
-  #     bssid: ${wifi_bssid}
-  ap:
-    ssid: ${ap_ssid_${rover_id}}
-    password: ${ap_password_${rover_id}}
-    channel: ${ap_channel_${rover_id}}
+  networks:
+    - ssid: ${wifi_ssid}
+      password: ${wifi_password}
+      hidden: ${wifi_hidden}
+      bssid: ${wifi_bssid}
+  # ap:
+  #   ssid: ${ap_ssid_${rover_id}}
+  #   password: ${ap_password_${rover_id}}
+  #   channel: ${ap_channel_${rover_id}}
 
 external_components:
   - source: components
@@ -156,6 +161,6 @@ esp32_camera:
   href_pin: GPIO23
   pixel_clock_pin: GPIO22
   resolution: 800x600
-  max_framerate: 1 fps
+  max_framerate: 3 fps
   # resolution: 1600x1200
   jpeg_quality: 10

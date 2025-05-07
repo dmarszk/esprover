@@ -1,10 +1,11 @@
-const ESP_HOST = 'rover.home';
+const ESP_HOST = 'rover.local';
 const CAMERA_STREAM_URL = 'http://' + ESP_HOST + ':8080'
 const API_BASE_URL = 'http://' + ESP_HOST + ':80/';
 const CAMERA_RELOAD_INTERVAL = 5000;
-const MOTOR_COMMAND_DEADTIME = 200;
-const DEBUG = true; // Enable debug logging
-const STICK_RADIUS = 150;
+const MOTOR_COMMAND_DEADTIME = 400;
+const DEBUG = false; // Enable debug logging
+const STICK_RADIUS = 100;
+const FETCH_TIMEOUT = 400;
 
 // Joystick handling
 var joystick = new VirtualJoystick({
@@ -22,7 +23,7 @@ function calculateMotorCommand(deltaX, deltaY) {
         r = 1;
     }
     alpha = Math.atan2(deltaY, deltaX);
-    
+
     alphaDeg = alpha * 180 / Math.PI;
     alphaDeg = (alphaDeg + 360) % 360; // Normalize to [0, 360)
     if (alphaDeg > 0 && alphaDeg <= 90) {
@@ -55,15 +56,25 @@ function sendMotorCommand(motorCmd) {
     if (now - lastMotorCommand > MOTOR_COMMAND_DEADTIME) {
         lastMotorCommand = now;
         if (motorCmd.L > 0) {
-            configureFan('motor_left', 'turn_on', motorCmd.L);
+            if (document.getElementById('motor-left-pwr').textContent !== (motorCmd.L).toString())
+                configureFan('motor_left', 'turn_on', motorCmd.L, null, 'forward');
+        }
+        else if (motorCmd.L < 0) {
+            if (document.getElementById('motor-left-pwr').textContent !== (-motorCmd.L).toString())
+                configureFan('motor_left', 'turn_on', -motorCmd.L, null, 'reverse');
         }
         else if (document.getElementById('motor-left-pwr').textContent !== "0") {
             configureFan('motor_left', 'turn_off');
         }
         if (motorCmd.R > 0) {
-            configureFan('motor_right', 'turn_on', motorCmd.R);
+            if (document.getElementById('motor-right-pwr').textContent !== (motorCmd.R).toString())
+                configureFan('motor_right', 'turn_on', motorCmd.R, null, 'forward');
         }
-        else if (document.getElementById('motor-right-pwr').textContent !== "0") { 
+        else if (motorCmd.R < 0) {
+            if (document.getElementById('motor-right-pwr').textContent !== (-motorCmd.R).toString())
+                configureFan('motor_right', 'turn_on', -motorCmd.R, null, 'reverse');
+        }
+        else if (document.getElementById('motor-right-pwr').textContent !== "0") {
             configureFan('motor_right', 'turn_off');
         }
     }
@@ -189,7 +200,7 @@ eventSource.addEventListener('log', (event) => {
 eventSource.onerror = () => {
     console.error('EventSource connection error.');
     document.getElementById('status').style.color = 'red';
-    document.getElementById('status').textContent = 'OFFLINE';
+    document.getElementById('status').textContent = 'OFFLINE - RECONNECTING...';
 };
 
 // Check for event timeout
@@ -197,7 +208,7 @@ let lastEventTime = Date.now();
 setInterval(() => {
     if (Date.now() - lastEventTime > 35000) {
         document.getElementById('status').style.color = 'red';
-        document.getElementById('status').textContent = 'OFFLINE';
+        document.getElementById('status').textContent = 'OFFLINE - RECONNECTING...';
     }
 }, 1000);
 
@@ -255,7 +266,7 @@ function configureFan(fanId, state, speedLevel = null, oscillation = null, direc
         url += `?${params.toString()}`;
     }
 
-    fetch(url, { method: 'POST' })
+    fetch(url, { method: 'POST', signal: AbortSignal.timeout(FETCH_TIMEOUT)})
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to configure fan: ${response.statusText}`);
@@ -269,7 +280,7 @@ function configureFan(fanId, state, speedLevel = null, oscillation = null, direc
 function configureNumber(numberId, value) {
     const url = `${API_BASE_URL}number/${numberId}/set?value=${value}`;
 
-    fetch(url, { method: 'POST' })
+    fetch(url, { method: 'POST', signal: AbortSignal.timeout(FETCH_TIMEOUT) })
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to configure number: ${response.statusText}`);
