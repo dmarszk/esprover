@@ -1,4 +1,5 @@
-const ESP_HOST = 'rover.local';
+// ESP_HOST = 'rover.home'; // Uncomment this line to set a static host
+ESP_HOST = typeof ESP_HOST !== 'undefined' ? ESP_HOST : window.location.hostname;
 const CAMERA_STREAM_URL = 'http://' + ESP_HOST + ':8080'
 const API_BASE_URL = 'http://' + ESP_HOST + ':80/';
 const CAMERA_RELOAD_INTERVAL = 5000;

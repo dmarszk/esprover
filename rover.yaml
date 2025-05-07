@@ -42,7 +42,7 @@ ota:
     password: ""
 
 wifi:
-  domain: .home
+  domain: .local
   power_save_mode: none
   output_power: 18dB
   # networks:
