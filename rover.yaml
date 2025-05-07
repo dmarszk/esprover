@@ -20,6 +20,7 @@ esp32:
   board: esp-wrover-kit
   framework:
     type: arduino
+    # IDF mode is not supported with current rover_web_server
     #type: esp-idf
     # sdkconfig_options:
     #   CONFIG_LOG_MAXIMUM_LEVEL_DEBUG: y
@@ -48,9 +49,6 @@ wifi:
     ssid: ${ap_ssid_${rover_id}}
     password: ${ap_password_${rover_id}}
     channel: ${ap_channel_${rover_id}}
-
-# Announce itself via mDNS
-mdns:
 
 external_components:
   - source: components

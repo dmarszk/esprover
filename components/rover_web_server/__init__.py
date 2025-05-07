@@ -269,6 +269,14 @@ async def to_code(config):
 
     version = config[CONF_VERSION]
 
+    if CORE.using_arduino:
+        if CORE.is_esp32:
+            cg.add_library("DNSServer", None)
+            cg.add_library("WiFi", None)
+        if CORE.is_esp8266:
+            cg.add_library("DNSServer", None)
+        if CORE.is_libretiny:
+            cg.add_library("DNSServer", None)
     cg.add(paren.set_port(config[CONF_PORT]))
     cg.add_define("USE_WEBSERVER")
     cg.add_define("USE_WEBSERVER_PORT", config[CONF_PORT])

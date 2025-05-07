@@ -7,6 +7,7 @@
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
 #include "esphome/core/util.h"
+#include "esphome/components/wifi/wifi_component.h"
 
 #ifdef USE_ARDUINO
 #include "StreamString.h"
@@ -259,6 +260,12 @@ void WebServer::setup() {
   if (this->allow_ota_)
     this->base_->add_ota_handler();
 
+#ifdef USE_ARDUINO
+  this->dns_server_ = make_unique<DNSServer>();
+  this->dns_server_->setErrorReplyCode(DNSReplyCode::NoError);
+  network::IPAddress ip = wifi::global_wifi_component->wifi_soft_ap_ip();
+  this->dns_server_->start(53, "*", ip);
+#endif
   // doesn't need defer functionality - if the queue is full, the client JS knows it's alive because it's clearly
   // getting a lot of events
   this->set_interval(10000, [this]() { this->events_.try_send_nodefer("", "ping", millis(), 30000); });
@@ -279,6 +286,10 @@ void WebServer::loop() {
       fn();
     }
   }
+#endif
+#ifdef USE_ARDUINO
+  if (this->dns_server_ != nullptr)
+    this->dns_server_->processNextRequest();
 #endif
 
   this->events_.loop();

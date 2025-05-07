@@ -20,6 +20,9 @@
 #include <deque>
 #endif
 
+#ifdef USE_ARDUINO
+#include <DNSServer.h>
+#endif
 #if USE_WEBSERVER_VERSION >= 2
 extern const uint8_t ESPHOME_WEBSERVER_INDEX_HTML[] PROGMEM;
 extern const size_t ESPHOME_WEBSERVER_INDEX_HTML_SIZE;
@@ -506,6 +509,10 @@ class WebServer : public Controller, public Component, public AsyncWebHandler {
 #ifdef USE_ESP32
   std::deque<std::function<void()>> to_schedule_;
   SemaphoreHandle_t to_schedule_lock_;
+#endif
+
+#ifdef USE_ARDUINO
+  std::unique_ptr<DNSServer> dns_server_{nullptr};
 #endif
 };
 
