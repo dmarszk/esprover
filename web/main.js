@@ -17,13 +17,40 @@ var joystick = new VirtualJoystick({
 
 let lastMotorCommand = Date.now();
 function calculateMotorCommand(deltaX, deltaY) {
+    r = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / STICK_RADIUS;
+    if (r > 1) {
+        r = 1;
+    }
+    alpha = Math.atan2(deltaY, deltaX);
+    
+    alphaDeg = alpha * 180 / Math.PI;
+    alphaDeg = (alphaDeg + 360) % 360; // Normalize to [0, 360)
+    if (alphaDeg > 0 && alphaDeg <= 90) {
+        // Bottom-right quadrant
+        L = r * Math.cos(alpha * 2); // transition from 1 to -1
+        R = -r; // Full back speed for right motor
+    } else if (alphaDeg > 90 && alphaDeg <= 180) {
+        // Bottom-left quadrant
+        L = -r; // Full back speed for left motor
+        R = r * Math.cos(alpha * 2); // transition from -1 to 1
+    } else if (alphaDeg > 180 && alphaDeg <= 270) {
+        // Top-left quadrant
+        L = -r * Math.cos(alpha * 2); // transition from -1 to 1
+        R = r; // Full forward speed for right motor
+    } else if (alphaDeg > 270 && alphaDeg < 360) {
+        // Top-right quadrant
+        L = r; // Full forward speed for left motor
+        R = -r * Math.cos(alpha * 2); // transition from 1 to -1
+    } else {
+        L = 0;
+        R = 0;
+    }
     return {
-        L: deltaX.toFixed(),
-        R: deltaY.toFixed()
+        L: (L * 100).toFixed(),
+        R: (R * 100).toFixed(),
     };
 }
-function sendMotorCommand(deltaX, deltaY) {
-    motorCmd = calculateMotorCommand(deltaX, deltaY);
+function sendMotorCommand(motorCmd) {
     const now = Date.now();
     if (now - lastMotorCommand > MOTOR_COMMAND_DEADTIME) {
         lastMotorCommand = now;
@@ -43,14 +70,14 @@ function sendMotorCommand(deltaX, deltaY) {
 }
 setInterval(function () {
     var outputEl = document.getElementById('joystick-status');
+    motorCmd = calculateMotorCommand(joystick.deltaX(), joystick.deltaY());
     outputEl.innerHTML = ''
         + ' dx:' + joystick.deltaX().toFixed(2)
         + ' dy:' + joystick.deltaY().toFixed(2)
-        + (joystick.right() ? ' right' : '')
-        + (joystick.up() ? ' up' : '')
-        + (joystick.left() ? ' left' : '')
-        + (joystick.down() ? ' down' : '')
-    sendMotorCommand(joystick.deltaX(), joystick.deltaY());
+        + ' <br>'
+        + ' L:' + motorCmd.L
+        + ' R:' + motorCmd.R;
+    sendMotorCommand(motorCmd);
 }, 1 / 30 * 1000);
 
 // Set camera stream source dynamically
